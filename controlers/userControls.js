@@ -12,7 +12,7 @@ exports.postUser = async (req,res,next) => {
     console.log(userExist)
 
     if(userExist.length > 0){
-        res.status(500).json({ errormsg: 'User already exists with this email Id'})
+        res.status(207).json({ message: 'User already exists with this email Id'})
     } else {
         const saltrounds = 10;
         bcrypt.hash(password,saltrounds, async(err,hash) => {

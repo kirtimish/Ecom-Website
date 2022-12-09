@@ -50,7 +50,7 @@ exports.getExpenses = async (req,res,next) => {
                 hasNextPage: totalItems > page * Items_Per_Page,
                 hasPreviousPage: page > 1,
                 nextPage: +page + 1,
-                previuosPage: +page - 1,
+                previousPage: +page - 1,
                 lastPage: Math.ceil(totalItems / Items_Per_Page) 
             }
         })

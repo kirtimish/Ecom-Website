@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', async function() {
     checkIfPremium();
 
     console.log(response.data.info);
-    if(response.status == 200){
+    if(response.status === 200){
         listOfUsers.innerHTML = ''
         for(let i=0;i<response.data.data.length;i++){
             showexpenseonScreen(response.data.data[i]);
@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 
 })
 
-function showPagination({currentPage,hasNextPage,hasPreviousPage,nextPage,previuosPage,lastPage}){
+function showPagination({currentPage,hasNextPage,hasPreviousPage,nextPage,previousPage,lastPage}){
     let page = 1;
     const pagination = document.getElementById('pagination')
     
@@ -82,12 +82,6 @@ function showPagination({currentPage,hasNextPage,hasPreviousPage,nextPage,previu
         pagination.appendChild(button3)
     }
 
-    if( currentPage!=lastPage && nextPage!=lastPage && lastPage != 0){
-        const button3 = document.createElement('button');
-        button3.innerHTML = lastPage ;
-        button3.addEventListener('click' , ()=>getPageExpenses(page,lastPage))
-        pagination.appendChild(button3)
-    }
 }
 
 async function getPageExpenses(page,limitper){
