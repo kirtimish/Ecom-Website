@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded',async (e) => {
     try {
         console.log(token, clickedUserId)
 
-        const res = await axios.get(`http://44.202.167.13:3000/getInfo/${clickedUserId}`, {headers : {'Authorization': token}})
+        const res = await axios.get(`http://52.202.41.22:3000/getInfo/${clickedUserId}`, {headers : {'Authorization': token}})
 
         if(res.data.success){
             res.data.data.map(data => {
