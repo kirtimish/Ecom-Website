@@ -9,7 +9,7 @@ function forgotPass(event){
     console.log('1255');
     console.log(obj);
 
-    axios.post('http://localhost:3000/password/forgotpassword',obj, {headers: {"Authorization": token}}).then(response => {
+    axios.post('http://44.202.167.13:3000/password/forgotpassword',obj, {headers: {"Authorization": token}}).then(response => {
 
         if(response.status === 202){
         document.body.innerHTML += '<div style="color:red;text-align:center;margin-top:70px;">Mail Successfuly sent <div>'

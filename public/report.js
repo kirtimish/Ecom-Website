@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded',async (event) => {
     event.preventDefault();
 
     try {
-        const res = await axios.get('http://localhost:3000/getAllUrl',{headers: {'Authorization' : token}})
+        const res = await axios.get('http://44.202.167.13:3000/getAllUrl',{headers: {'Authorization' : token}})
 
         if(res.status === 200){
             console.log(res)
@@ -38,7 +38,7 @@ download.addEventListener('click',async(event) => {
     event.preventDefault();
 
     try {
-        let response = await axios.get('http://localhost:3000/download', {headers:{'Authorization' : token}})
+        let response = await axios.get('http://44.202.167.13:3000/download', {headers:{'Authorization' : token}})
 
         if(response.status === 200){
             console.log(response.data.downloadUrlData)
