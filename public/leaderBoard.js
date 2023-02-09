@@ -4,14 +4,15 @@ window.addEventListener('DOMContentLoaded',async (e) => {
     e.preventDefault()
 
     let token = localStorage.getItem('token')
-    let clickedUserId = +localStorage.getItem('clickedUser')
+    let clickedUserId = localStorage.getItem('clickedUser')
     
     try {
         console.log(token, clickedUserId)
 
-        const res = await axios.get(`http://52.202.41.22:3000/getInfo/${clickedUserId}`, {headers : {'Authorization': token}})
-
-        if(res.data.success){
+        const res = await axios.get(`http://localhost:3000/getInfo/${clickedUserId}`, {headers : {'Authorization': token}})
+        
+        console.log(res.data.data);
+        if(res.data.data){
             res.data.data.map(data => {
                 showOnScreen(data)
             })

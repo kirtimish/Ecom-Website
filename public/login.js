@@ -13,7 +13,7 @@ async function signUp(event) {
     }
 
     try {
-        const res = await axios.post('http://52.202.41.22:3000/user/login',obj)
+        const res = await axios.post('http://localhost:3000/user/login',obj)
         console.log(res.data.token)
         localStorage.setItem('token',res.data.token)
         if(res.status == 201){

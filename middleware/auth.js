@@ -9,10 +9,13 @@ const authenticate = async (req,res,next) => {
         const user = jwt.verify(token,'secforauthtousfoexap')
         console.log("userId>>>>>",user.userId)
 
-        const getUser = await User.findByPk(user.userId)
-
-        req.user = getUser;
-        next();
+        User.findById(user.userId).then((user=>{
+            console.log('userrrr',user._id)
+            req.user=user;
+            console.log(req.user._id)
+            console.log(req.user)
+            next();
+        }))
 
     } catch (error) {
         console.log(error);

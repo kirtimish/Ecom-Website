@@ -7,14 +7,14 @@ const ForgotPassword = require('../models/forgotPass');
 exports.forgotPassword = async (req,res,next) => {
     const {email} =req.body ;
 
-    const user = await User.findOne({where:{email}});
-
-    const id = uuid.v4();
-
-    console.log(id);
+    const user = await User.findOne({email: email});
     console.log(user)
 
-    user.createForgotPassword({id,active:true}).catch(err=>{ throw new Error(err)})
+    const forgotPassword = new ForgotPassword({active:true})
+    forgotPassword.save();
+    
+    const id = forgotPassword._id;
+    console.log(id);
 
     console.log('into forgot');
 
@@ -56,7 +56,7 @@ exports.forgotPassword = async (req,res,next) => {
         to: recievers,
         subject: 'forgotpass please reset',
         textContent: `Follow the link and reset password`,
-        htmlContent: `Click on the link below to reset password <br> <a href="http://52.202.41.22:3000/password/reset/${id}">Reset password</a>`,
+        htmlContent: `Click on the link below to reset password <br> <a href="http://localhost:3000/password/reset/${id}">Reset password</a>`,
 
     }).then((response)=>{
         //console.log('after transaction');
@@ -69,14 +69,19 @@ exports.resetPassword = async (req,res,next) => {
         console.log('into reset')
 
         let id = req.params.id;
+        console.log(id)
 
-        let forgotpasswordRequest = await ForgotPassword.findOne({where:{id}})
+        ForgotPassword.findById(id).then(forgotPassword => {
+            forgotPassword.active = false
+            return forgotPassword.save();
+        })
+        // let forgotpasswordRequest = await ForgotPassword.findOne({_id: id})
 
-        if(!forgotpasswordRequest){
-            return res.status(404).json({msg: 'User desnt exist'})
-        }
+        // if(!forgotpasswordRequest){
+        //     return res.status(404).json({msg: 'User desnt exist'})
+        // }
 
-        forgotpasswordRequest.update({active:false})
+        // forgotpasswordRequest.update({active:false})
 
         res.status(200).send(`<html>
         <script>

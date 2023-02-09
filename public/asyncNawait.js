@@ -14,7 +14,7 @@ async function addExpense(event) {
     }
         try {
             
-            const res = await axios.post('http://52.202.41.22:3000/user/insert-expense',expenseDetails,{headers: { 'Authorization' : token}})
+            const res = await axios.post('http://localhost:3000/user/insert-expense',expenseDetails,{headers: { 'Authorization' : token}})
             console.log(res)
             if(res.status == 201){
                 showexpenseonScreen(res.data.expenseCreated);
@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', async function() {
     let page = 1;
     
 
-    let response = await axios.post(`http://52.202.41.22:3000/user/get-expenses/${page}`,{Items_Per_Page: Items_Per_Page},{headers: { "Authorization": token}} )
+    let response = await axios.post(`http://localhost:3000/user/get-expenses/${page}`,{Items_Per_Page: Items_Per_Page},{headers: { "Authorization": token}} )
     checkIfPremium();
 
     console.log(response.data.info);
@@ -92,7 +92,7 @@ async function getPageExpenses(page,limitper){
 
     const token = localStorage.getItem('token')
 
-    let response = await axios.post(`http://52.202.41.22:3000/user/get-expenses/${page}`,{Items_Per_Page: Items_Per_Page},{headers: { "Authorization": token}} )
+    let response = await axios.post(`http://localhost:3000/user/get-expenses/${page}`,{Items_Per_Page: Items_Per_Page},{headers: { "Authorization": token}} )
     checkIfPremium();
 
     console.log(response.data.info);
@@ -122,9 +122,9 @@ function perPage(event) {
 
 function showexpenseonScreen(expense){
     const parentNode = document.getElementById('expenses');
-    const childHTML = `<li id=${expense.id} class="expense-list-item">  ${expense.expenseAmt} : ${expense.description} : ${expense.category}
-    <button onClick=deleteExpense("${expense.id}") class="action-btn">Delete Expense</button>
-    <button onclick=editExpense("${expense.id}","${expense.category}","${expense.expenseAmt}","${expense.description}") class="edit-btn">Edit Expense</button>
+    const childHTML = `<li id=${expense._id} class="expense-list-item">  ${expense.expenseAmt} : ${expense.description} : ${expense.category}
+    <button onClick=deleteExpense("${expense._id}") class="action-btn">Delete Expense</button>
+    <button onclick=editExpense("${expense._id}","${expense.category}","${expense.expenseAmt}","${expense.description}") class="edit-btn">Edit Expense</button>
     </li>`
     parentNode.innerHTML = parentNode.innerHTML + childHTML;
 
@@ -140,11 +140,12 @@ function editExpense(userId,category,expenseAmt,desc){
     deleteExpense(userId);
 }
 
-function deleteExpense(userId){
+function deleteExpense(expenseid){
     const token = localStorage.getItem('token')
-    axios.delete(`http://52.202.41.22:3000/user/delete-expense/${userId}`, {headers: {"Authorization": token}})
+    console.log(expenseid)
+    axios.delete(`http://localhost:3000/user/delete-expense/${expenseid}`, {headers: {"Authorization": token}})
     .then(res => {
-        removeexpensefromScreen(userId);
+        removeexpensefromScreen(expenseid);
     })
     .catch(error =>{
         console.log(error)
@@ -176,7 +177,7 @@ function checkIfPremium() {
 
 document.getElementById('premium-btn').onclick = async function (e) {
     const token = localStorage.getItem('token')
-    const response  = await axios.get('http://52.202.41.22:3000/purchase/premiummembership', { headers: {"Authorization" : token} });
+    const response  = await axios.get('http://localhost:3000/purchase/premiummembership', { headers: {"Authorization" : token} });
     console.log(response);
     var options =
     {
@@ -194,7 +195,7 @@ document.getElementById('premium-btn').onclick = async function (e) {
      // This handler function will handle the success payment
      "handler": function (response) {
          console.log(response);
-         axios.post('http://52.202.41.22:3000/purchase/updatetransactionstatus',{
+         axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
              order_id: options.order_id,
              payment_id: response.razorpay_payment_id,
          }, { headers: {"Authorization" : token} }).then(() => {
@@ -226,16 +227,14 @@ document.getElementById('premium-btn').onclick = async function (e) {
 async function getPremiumLeaderboard(){
     const token = localStorage.getItem('token');
 try {
-const response = await axios.get('http://52.202.41.22:3000/premiums', {headers : {'Authorization': token}} )
+const response = await axios.get('http://localhost:3000/premiums', {headers : {'Authorization': token}} )
+console.log(response.data.data);
 
-if(response.data.success){
-    console.log(response);
-    if(response.data.data.length>0){
+    if(response.data.data.length > 0){
         response.data.data.sort((a,b)=>{
             return b.totalExpense - a.totalExpense;
         });
-        console.log(response.data.data[0].user.username);
-        console.log(response.data.data[0].user)
+        console.log(response.data.data);
 
        
 
@@ -245,7 +244,6 @@ if(response.data.success){
         })
 
     }
-}
 
 } catch (err) {
 console.log(err);
@@ -262,7 +260,7 @@ function showLeaderboard(user , id){
     downloadBtn.removeAttribute('disabled')
     
     let child = `
-    <li class="list" onclick="openUserExpenses('${user.user.id}')">${id+1} ${user.user.username} ${user.totalExpense}</li>`
+    <li class="list" onclick="openUserExpenses('${user.id}')">${id+1} ${user.name} ${user.totalExpense}</li>`
 
     leaderboardDiv.innerHTML += child
 }
